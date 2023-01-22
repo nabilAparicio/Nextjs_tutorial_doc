@@ -1,7 +1,8 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css';
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import Link from "next/link";
 
-export default function Home() {
+export default function Home({ allPostsData }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -11,7 +12,7 @@ export default function Home() {
 
       <main>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Read <Link href="/posts/first-post">this page!</Link>
         </h1>
 
         <p className={styles.description}>
@@ -49,13 +50,28 @@ export default function Home() {
         </div>
       </main>
 
+      <section className={`${styles.headingMd} ${styles.padding1px}`}>
+        <h2 className={styles.headingLg}>Blog</h2>
+        <ul className={styles.list}>
+          {allPostsData?.map(({ id, date, title }) => (
+            <li className={styles.listItem} key={id}>
+              {title}
+              <br />
+              {id}
+              <br />
+              {date}
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <footer>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
         </a>
       </footer>
@@ -111,5 +127,15 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
+  );
+}
+
+import { getSortedPostsData } from "../lib/post";
+export async function getStaticProps() {
+  const allPostsData = getSortedPostsData();
+  return {
+    props: {
+      allPostsData,
+    },
+  };
 }
